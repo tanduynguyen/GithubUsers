@@ -6,71 +6,67 @@
 //
 
 import Foundation
+import os
 
 /// This is our network class, it will handle all our requests
 class NetworkManager {
-
-    /// These are the errors this class might return
-    enum ManagerErrors: Error {
-        case invalidResponse
-        case invalidStatusCode(Int)
+    
+    private let urlSession: URLSession
+    private let logger = Logger(subsystem: "com.duynguyen.GithubUsers", category: "NetworkManager")
+    
+    private static let defaultSession: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        configuration.urlCache = URLCache(memoryCapacity: 10 * 1024 * 1024, // 10 MB
+                                          diskCapacity: 50 * 1024 * 1024, // 50 MB
+                                          diskPath: nil)
+        return URLSession(configuration: configuration)
+    }()
+    
+    static let sharedInstance: NetworkManager = {
+        NetworkManager()
+    }()
+    
+    init(urlSession: URLSession = NetworkManager.defaultSession) {
+        self.urlSession = urlSession
     }
-
-    /// The request method you like to use
-    enum HttpMethod: String {
-        case get
-        case post
-
-        var method: String { rawValue.uppercased() }
+    
+    func performRequest<T: Decodable>(with provider: APIProvider, decodingType: T.Type) async throws -> T {
+        let data = try await handleRequest(with: provider.request)
+        if let decodedResponse = decode(T.self, from: data) {
+            logger.info("✅ Data successfully fetched and decoded.")
+            return decodedResponse
+        } else {
+            logger.error("❌ Failed to decode data received from \(provider.request.url?.absoluteString ?? "unknown URL")")
+            if let json = data.toJSON() {
+                logger.info("❌ \(json.debugDescription)")
+            }
+            throw NetworkError.decodingError(DecodingError.dataCorrupted(.init(codingPath: [], debugDescription: "Failed to decode data.")))
+        }
     }
-
-    /// Request data from an endpoint
-    /// - Parameters:
-    ///   - url: the URL
-    ///   - httpMethod: The HTTP Method to use, either get or post in this case
-    ///   - completion: The completion closure, returning a Result of either the generic type or an error
-    func request<T: Decodable>(fromURL url: URL, httpMethod: HttpMethod = .get, completion: @escaping (Result<T, Error>) -> Void) {
-
-        // Because URLSession returns on the queue it creates for the request, we need to make sure we return on one and the same queue.
-        // You can do this by either create a queue in your class (NetworkManager) which you return on, or return on the main queue.
-        let completionOnMain: (Result<T, Error>) -> Void = { result in
-            DispatchQueue.main.async {
-                completion(result)
+    
+    @discardableResult
+    private func handleRequest(with request: URLRequest) async throws -> Data {
+        logger.info("⬇️ Attempting to send request to \(request.url?.absoluteString ?? "unknown URL")")
+        
+        do {
+            let (data, response) = try await urlSession.data(for: request)
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                logger.error("❌ Failed to cast response to HTTPURLResponse during request.")
+                throw NetworkError.noData
             }
+            
+            if (200...299).contains(httpResponse.statusCode) {
+                logger.info("✅ Request successfully completed.")
+                return data
+            } else {
+                logger.error("❌ HTTP request failed with status code: \(httpResponse.statusCode) \(request.url?.absoluteString ?? "")")
+                throw NetworkError.noData
+            }
+        } catch {
+            logger.error("❌ Request operation failed with error: \(error.localizedDescription)")
+            throw error
         }
-
-        // Create the request. On the request you can define if it is a GET or POST request, add body and more.
-        var request = URLRequest(url: url)
-        request.httpMethod = httpMethod.method
-
-        let urlSession = URLSession.shared.dataTask(with: request) { data, response, error in
-            // First check if we got an error, if so we are not interested in the response or data.
-            // Remember, and 404, 500, 501 http error code does not result in an error in URLSession, it
-            // will only return an error here in case of e.g. Network timeout.
-            if let error = error {
-                completionOnMain(.failure(error))
-                return
-            }
-
-            // Lets check the status code, we are only interested in results between 200 and 300 in statuscode. If the statuscode is anything
-            // else we want to return the error with the statuscode that was returned. In this case, we do not care about the data.
-            guard let urlResponse = response as? HTTPURLResponse else { return completionOnMain(.failure(ManagerErrors.invalidResponse)) }
-            if !(200..<300).contains(urlResponse.statusCode) {
-                return completionOnMain(.failure(ManagerErrors.invalidStatusCode(urlResponse.statusCode)))
-            }
-
-            // Now that all our prerequisites are fullfilled, we can take our data and try to translate it to our generic type of T.
-            guard let data = data else { return }
-            do {
-                let users = try JSONDecoder().decode(T.self, from: data)
-                completionOnMain(.success(users))
-            } catch {
-                debugPrint("Could not translate the data to the requested type. Reason: \(error.localizedDescription)")
-                completionOnMain(.failure(error))
-            }
-        }
-
-        // Start the request
-        urlSession.resume()
     }
 }

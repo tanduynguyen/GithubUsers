@@ -9,24 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Github Users")
-        }
-        .padding()
-        .onAppear {
-            let userManager = UserManager()
-            userManager.fetchUsersList { result in
-                switch result {
-                case .success(let users):
-                    print(users)
-                case .failure(let error):
-                    print(error)
+        NavigationStack {
+            NavigationLink(destination: UsersList()) {
+                VStack {
+                    Image(systemName: "globe")
+                        .imageScale(.large)
+                        .foregroundStyle(.tint)
+                    Text("Github Users")
                 }
             }
         }
+        .padding()
     }
 }
 

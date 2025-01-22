@@ -8,6 +8,6 @@
 import Foundation
 
 struct Constants {
-    static let apiURLString = "https://api.github.com/users"
+    static let apiURLString = "https://api.github.com"
     static let itemsPerPage: Int = 20
 }

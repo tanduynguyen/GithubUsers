@@ -11,7 +11,9 @@ import SwiftUI
 struct GithubUsersApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                UsersList()
+            }
         }
     }
 }
