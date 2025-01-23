@@ -16,4 +16,13 @@ struct UserManager {
             throw error
         }
     }
+    
+    static func getUserDetails(login: String, networkManager: NetworkManager) async throws -> User {
+        do {
+            let user = try await networkManager.performRequest(with: .getUserDetails(login: login), decodingType: User.self)
+            return user
+        } catch {
+            throw error
+        }
+    }
 }

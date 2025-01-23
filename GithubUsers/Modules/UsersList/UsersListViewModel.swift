@@ -7,13 +7,6 @@
 
 import Foundation
 
-enum State {
-    case idle
-    case loading
-    case failure(Error)
-    case success
-}
-
 final class UsersListViewModel: ObservableObject {
     @Published private(set) var state = State.idle
     @Published private(set) var users: [User] = []

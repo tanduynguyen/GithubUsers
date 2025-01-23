@@ -17,18 +17,7 @@ struct UsersList: View {
                 ProgressView()
             case .success:
                 List(viewModel.users) { user in
-//                    NavigationLink(destination: PhotoDetail(photo: photo)) {
-                        HStack {
-                            AsyncImage(url: user.avatar_url) { image in
-                                image.resizable()
-                            } placeholder: {
-                                Image(systemName: "photo")
-                            }
-                            .frame(width: 50, height: 50)
-                            .clipShape(Circle())
-                            Text(user.login)
-                        }
-//                    }
+                    UserItem(user: user)
                     if viewModel.users.isLastItem(user) {
                         HStack {
                             Spacer()
@@ -41,6 +30,7 @@ struct UsersList: View {
                         }
                     }
                 }
+                .listRowSeparator(.hidden)
                 .refreshable {
                     await viewModel.reload()
                 }
@@ -63,7 +53,10 @@ struct UsersList: View {
                 Color.clear
             }
         }
+        .listRowSeparator(.hidden)
         .listStyle(.plain)
+        .scrollContentBackground(.hidden)
+        .listRowBackground(Constants.bgColor)
         .navigationBarTitle("Github Users")
         .task {
             await viewModel.fetchUsers()

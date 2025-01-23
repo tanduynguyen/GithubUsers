@@ -10,6 +10,10 @@ import Foundation
 struct User: Codable, Identifiable, Hashable {
     let id: Int
     let login: String
-    var avatar_url: URL? = nil
-    var html_url: URL? = nil
+    var avatar_url: URL?
+    var html_url: URL?
+    var blog: URL?
+    var location: String?
+    var followers: Int?
+    var following: Int?
 }

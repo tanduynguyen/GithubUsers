@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import SwiftUICore
 
 struct Constants {
     static let apiURLString = "https://api.github.com"
     static let itemsPerPage: Int = 20
+    static let bgColor = Color.gray
 }
