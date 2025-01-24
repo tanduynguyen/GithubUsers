@@ -8,7 +8,7 @@
 import Foundation
 
 enum APIProvider {
-    case getUsersList(page: Int)
+    case getUsersList(since: Int)
     case getUserDetails(login: String)
 }
 
@@ -20,7 +20,7 @@ extension APIProvider: ApiEndpoint {
     
     var path: String {
         switch self {
-        case .getUsersList(page: _):
+        case .getUsersList:
             return "users"
         case .getUserDetails(login: let login):
             return "users/\(login)"
@@ -29,8 +29,8 @@ extension APIProvider: ApiEndpoint {
     
     var params: [String : Any]? {
         switch self {
-        case .getUsersList(let page):
-            return ["per_page": Constants.itemsPerPage, "since": Constants.itemsPerPage * page]
+        case .getUsersList(let since):
+            return ["per_page": Constants.itemsPerPage, "since": since]
         default:
             return nil
         }

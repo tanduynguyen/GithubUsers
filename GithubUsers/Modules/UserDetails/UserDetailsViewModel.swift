@@ -11,7 +11,7 @@ final class UserDetailsViewModel: ObservableObject {
     @Published private(set) var state = State.idle
     @Published private(set) var user: User
 
-    let networkManager = NetworkManager()
+    let userManager = UserManager()
     
     init(state: State = State.idle, user: User) {
         self.state = state
@@ -21,7 +21,7 @@ final class UserDetailsViewModel: ObservableObject {
     @MainActor func getUserDetails() async {
         state = .loading
         do {
-            let newUser = try await UserManager.getUserDetails(login: user.login, networkManager: networkManager)
+            let newUser = try await userManager.getUserDetails(login: user.login)
             self.user = newUser
             state = .success
         } catch {

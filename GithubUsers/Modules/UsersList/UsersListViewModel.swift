@@ -10,35 +10,38 @@ import Foundation
 final class UsersListViewModel: ObservableObject {
     @Published private(set) var state = State.idle
     @Published private(set) var users: [User] = []
-    private(set) var page: Int = 0
+    private(set) var since: Int = 0
     private(set) var hasMoreRows = false
-    let networkManager = NetworkManager()
+    let userManager = UserManager()
     
-    @MainActor func fetchUsers() async {
-        switch state {
-        case .loading:
-            return
-        default:
-            break
-        }
+    @MainActor func reloadUsers() async {
+        since = 0
+        users = []
         state = .loading
         do {
-            let newUsers = try await UserManager.fetchUsersList(page: page, networkManager: networkManager)
-            hasMoreRows = newUsers.count == Constants.itemsPerPage
-            users.append(contentsOf: newUsers)
+            try await fetchUsersList()
             state = .success
         } catch {
             state = .failure(error)
         }
     }
     
-    func checkNextPage() async {
-        page += 1
-        await fetchUsers()
+    @MainActor func fetchNextUsers() async {
+        do {
+            try await fetchUsersList()
+        } catch {
+            debugPrint(error.localizedDescription)
+        }
     }
     
-    func reload() async {
-        page = 0
-        await fetchUsers()
+    func fetchUsersList() async throws {
+        let newUsers = try await userManager.fetchUsersList(since: since)
+        hasMoreRows = newUsers.count == Constants.itemsPerPage
+        since = newUsers.last?.id ?? 0
+
+        // Publishing changes from background threads is not allowed
+        await MainActor.run {
+            users.append(contentsOf: newUsers)
+        }
     }
 }

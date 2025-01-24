@@ -25,9 +25,9 @@ struct UserDetailsView: View {
                         FollowView(user: viewModel.user, isFolllowing: true)
                         Spacer()
                     }
-                    Text("Blog").font(.headline)
-                        .listRowSeparator(.hidden)
                     if let url = viewModel.user.blog {
+                        Text("Blog").font(.headline)
+                            .listRowSeparator(.hidden)
                         Text(url.absoluteString)
                             .font(.caption)
                             .foregroundStyle(.gray)

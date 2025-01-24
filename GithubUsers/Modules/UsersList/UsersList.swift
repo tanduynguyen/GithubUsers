@@ -23,8 +23,10 @@ struct UsersList: View {
                             Spacer()
                             ProgressView()
                                 .frame(alignment: .center)
-                                .task {
-                                    await viewModel.checkNextPage()
+                                .onAppear {
+                                    Task {
+                                        try await viewModel.fetchUsersList()
+                                    }
                                 }
                             Spacer()
                         }
@@ -32,7 +34,9 @@ struct UsersList: View {
                 }
                 .listRowSeparator(.hidden)
                 .refreshable {
-                    await viewModel.reload()
+                    Task {
+                        await viewModel.reloadUsers()
+                    }
                 }
             case .failure:
                 GeometryReader { geometry in
@@ -46,7 +50,7 @@ struct UsersList: View {
                         .frame(minHeight: geometry.size.height)
                     }
                     .refreshable {
-                        await viewModel.reload()
+                        await viewModel.reloadUsers()
                     }
                 }
             case .idle:
@@ -58,8 +62,15 @@ struct UsersList: View {
         .scrollContentBackground(.hidden)
         .listRowBackground(Constants.bgColor)
         .navigationBarTitle("Github Users")
-        .task {
-            await viewModel.fetchUsers()
+        .onAppear {
+            switch viewModel.state {
+            case .idle:
+                Task {
+                    await viewModel.reloadUsers()
+                }
+            default:
+                return
+            }
         }
     }
 }
