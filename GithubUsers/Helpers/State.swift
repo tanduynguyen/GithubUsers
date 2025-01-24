@@ -5,7 +5,7 @@
 //  Created by Duy Nguyen on 23/1/25.
 //
 
-enum State {
+enum LoadingState {
     case idle
     case loading
     case failure(Error)

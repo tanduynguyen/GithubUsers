@@ -29,9 +29,22 @@
 		049C397F2D3E890300FB7EB4 /* GithubUsersUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GithubUsersUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		041000082D4370180063DD01 /* Exceptions for "GithubUsers" folder in "GithubUsers" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 049C39632D3E890200FB7EB4 /* GithubUsers */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		049C39662D3E890200FB7EB4 /* GithubUsers */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				041000082D4370180063DD01 /* Exceptions for "GithubUsers" folder in "GithubUsers" target */,
+			);
 			path = GithubUsers;
 			sourceTree = "<group>";
 		};
@@ -394,6 +407,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"GithubUsers/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GithubUsers/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -431,6 +445,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"GithubUsers/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = GithubUsers/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;

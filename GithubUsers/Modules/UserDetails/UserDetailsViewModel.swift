@@ -8,12 +8,12 @@
 import Foundation
 
 final class UserDetailsViewModel: ObservableObject {
-    @Published private(set) var state = State.idle
+    @Published private(set) var state = LoadingState.idle
     @Published private(set) var user: User
 
     let userManager = UserManager()
     
-    init(state: State = State.idle, user: User) {
+    init(state: LoadingState = .idle, user: User) {
         self.state = state
         self.user = user
     }

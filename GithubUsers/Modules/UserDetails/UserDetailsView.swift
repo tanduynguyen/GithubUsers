@@ -9,6 +9,7 @@ import SwiftUI
 
 struct UserDetailsView: View {
     @StateObject var viewModel: UserDetailsViewModel
+    @State private var isPresented = false
 
     var body: some View {
         VStack {
@@ -32,7 +33,7 @@ struct UserDetailsView: View {
                             .font(.caption)
                             .foregroundStyle(.gray)
                             .onTapGesture {
-                                UIApplication.shared.open(url)
+                                isPresented.toggle()
                             }
                             .listRowSeparator(.hidden)
                     }
@@ -41,6 +42,9 @@ struct UserDetailsView: View {
                 .listRowBackground(Constants.bgColor)
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
+                .sheet(isPresented: $isPresented) {
+                    WebviewPopup(url: viewModel.user.blog, isPresented: $isPresented)
+                }
             case .idle:
                 Color.clear
             }

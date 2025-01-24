@@ -10,6 +10,8 @@ import SwiftUI
 struct UserItem: View {
     var user: User
     var isInDetails: Bool = false
+    @State private var isPresented = false
+    
     var body: some View {
         ZStack {
             HStack {
@@ -34,7 +36,7 @@ struct UserItem: View {
                             .foregroundStyle(.blue)
                             .underline()
                             .onTapGesture {
-                                UIApplication.shared.open(url)
+                                isPresented.toggle()
                             }
                     }
                 }
@@ -48,5 +50,8 @@ struct UserItem: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(radius: 5, x: 0, y: 1)
         .listRowSeparator(.hidden)
+        .sheet(isPresented: $isPresented) {
+            WebviewPopup(url: user.html_url, isPresented: $isPresented)
+        }
     }
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 final class UsersListViewModel: ObservableObject {
-    @Published private(set) var state = State.idle
+    @Published private(set) var state = LoadingState.idle
     @Published private(set) var users: [User] = []
     private(set) var since: Int = 0
     private(set) var hasMoreRows = false
