@@ -16,4 +16,5 @@ struct User: Codable, Identifiable, Hashable {
     var location: String?
     var followers: Int?
     var following: Int?
+    var name: String?
 }

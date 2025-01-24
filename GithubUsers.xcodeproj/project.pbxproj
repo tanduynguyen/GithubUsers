@@ -37,6 +37,21 @@
 			);
 			target = 049C39632D3E890200FB7EB4 /* GithubUsers */;
 		};
+		044194322D43A4B400480FFA /* Exceptions for "GithubUsers" folder in "GithubUsersTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Extensions/Data+Ext.swift",
+				Helpers/Constants.swift,
+				Helpers/Decode.swift,
+				Models/User.swift,
+				Network/ApiEndpoint.swift,
+				Network/APIProvider.swift,
+				Network/NetworkError.swift,
+				Network/NetworkManager.swift,
+				Network/UserManager.swift,
+			);
+			target = 049C39742D3E890300FB7EB4 /* GithubUsersTests */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,6 +59,7 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				041000082D4370180063DD01 /* Exceptions for "GithubUsers" folder in "GithubUsers" target */,
+				044194322D43A4B400480FFA /* Exceptions for "GithubUsers" folder in "GithubUsersTests" target */,
 			);
 			path = GithubUsers;
 			sourceTree = "<group>";

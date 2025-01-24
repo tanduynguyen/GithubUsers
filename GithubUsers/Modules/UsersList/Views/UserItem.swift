@@ -23,7 +23,7 @@ struct UserItem: View {
                 .frame(width: 100, height: 100)
                 .clipShape(Circle())
                 VStack(alignment: .leading) {
-                    Text(user.login).font(.headline)
+                    Text(user.name.or(user.login)).font(.headline)
                     Divider()
                     if isInDetails {
                         HStack {
