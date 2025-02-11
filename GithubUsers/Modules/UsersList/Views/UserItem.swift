@@ -15,7 +15,7 @@ struct UserItem: View {
     var body: some View {
         ZStack {
             HStack {
-                AsyncImage(url: user.avatar_url) { image in
+                AsyncImage(url: user.avatarUrl) { image in
                     image.resizable()
                 } placeholder: {
                     Image(systemName: "photo")
@@ -30,7 +30,7 @@ struct UserItem: View {
                             Image(systemName: "location.circle")
                             Text(user.location.or(" "))
                         }
-                    } else if let url = user.html_url {
+                    } else if let url = user.htmlUrl {
                         Text(url.absoluteString)
                             .font(.caption)
                             .foregroundStyle(.blue)
@@ -51,7 +51,7 @@ struct UserItem: View {
         .shadow(radius: 5, x: 0, y: 1)
         .listRowSeparator(.hidden)
         .sheet(isPresented: $isPresented) {
-            WebviewPopup(url: user.html_url, isPresented: $isPresented)
+            WebviewPopup(url: user.htmlUrl, isPresented: $isPresented)
         }
     }
 }
